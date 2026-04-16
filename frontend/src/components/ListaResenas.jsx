@@ -1,25 +1,42 @@
 import { useEffect, useState } from "react";
 
-function ListaResenas() {
-    const [resenas, setResenas] = useState([]);
+function ListaResenas(){
+  const [resenas, setResenas] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
-    useEffect(() => {
+  useEffect(()=>{
+    fetch("http://localhost:3000/api/resenas")
+      .then(res => res.json())
+      .then(data => {
+        setResenas(data);
+        setCargando(false);
+      });
+  }, []);
 
-        fetch("http://localhost:3000/api/resenas").then(res => res.json()).then(data => setResenas(data));
-    }, []);
+  if(cargando){
+    return <div>cargando</div>;
+  }
 
-    return (
-        <div>
-            <h2>reseñas</h2>
-            {resenas.map(r => (
-                <div key={r.id}>
-                    <h3>{r.juego}</h3>
-                    <p>{r.contenido}</p>
-                    <p>{r.calificacion}</p>
-                    <p>por {r.nombre_gamer}</p>
-                </div>
-            ))}
-        </div>
-    );
+  return(
+    <main className="contenedorFeed">
+      <h1 className="tituloSeccion">ACTIVIDAD DE LA COMUNIDAD</h1>
+      {resenas.map(r=>(
+        <article key={r.id} className="tarjetaHorizontal">
+          <div className="contenedorImagen">
+            <img src={r.imagen_url} alt={r.juego} className="portadaJuego" />
+          </div>
+          <div className="infoResena">
+            <h2 className="nombreJuego">{r.juego}</h2>
+            <p style={{ color: 'var(--accent-cyan)' }}>Publicado por: {r.nombre_gamer}</p>
+            <p>"{r.contenido}"</p>
+            <div className="badgeScore">
+              PUNTAJE: <span style={{ color: 'white' }}>{r.calificacion}/10</span>
+            </div>
+          </div>
+        </article>
+      ))}
+    </main>
+  );
 }
+
 export default ListaResenas;

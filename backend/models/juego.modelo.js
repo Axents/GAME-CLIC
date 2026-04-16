@@ -1,7 +1,7 @@
 const db = require("../config/conexionBD");
 const Juego = {};
 
-Juego.obtenerTodos = (callback) => {
+Juego.obtenerTodos=(callback)=>{
     const sql = "SELECT * FROM juegos";
     db.query(sql, callback);
 };

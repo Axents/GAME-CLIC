@@ -1,74 +1,86 @@
 import { useState, useEffect } from "react";
 
-function CrearResena() {
+function CrearResena(){
+  const [juegos, setJuegos]=useState([]);
+  const [juego_id, setJuegoId]= useState("");
+  const [contenido, setContenido]= useState("");
+  const [calificacion, setCalificacion] = useState(5);
+  const [recomienda, setRecomienda] = useState(true);
 
-    const [juegos, setJuegos] = useState([]);
-    const [juego_id, setJuegoId] = useState("");
-    const [contenido, setContenido] = useState("");
-    const [calificacion, setCalificacion] = useState("");
+  useEffect(()=>{
+    fetch("http://localhost:3000/api/juegos")
+      .then(res => res.json())
+      .then(data => setJuegos(data));
+  },[]);
 
-    useEffect(() => {
-        fetch("http://localhost:3000/api/juegos").then(res => res.json()).then(data => setJuegos(data));
-    }, []);
+  const enviar=async (e)=>{
+    e.preventDefault();
 
-    const enviar = async (e) => {
-        e.preventDefault();
-        await fetch("http://localhost:3000/api/resenas", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem("token")
-            },
-            body: JSON.stringify({
-                juego_id,
-                contenido,
-                calificacion
-            })
-        });
+    if(!juego_id){
+        return alert("Selecciona un juego");
+    }
 
-        alert("reseña publicada");
-        window.location.reload();
-    };
+    const res=await fetch("http://localhost:3000/api/resenas",{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        juego_id: parseInt(juego_id),
+        contenido,
+        calificacion: parseInt(calificacion)
+      })
+    });
+    if (res.ok) window.location.reload();
+  };
 
-    return (
-        <form onSubmit={enviar}>
+  return(
+    <div className="panelAccion">
+      <h2 className="tituloSeccion">NUEVA OPINION</h2>
+      <form onSubmit={enviar}>
+        <div className="bloqueEntrada">
+          <label className="etiquetaModerna">VIDEOJUEGOS</label>
+          <select className="selectorModerno" value={juego_id} onChange={(e)=>setJuegoId(e.target.value)} required>
+            <option value="">Biblioteca</option>
+            {juegos.map(j=><option key={j.id} value={j.id}>{j.nombre}</option>)}
+          </select>
+        </div>
 
-            <h2>Nueva Reseña</h2>
+        <div className="bloqueEntrada">
+          <label className="etiquetaModerna">Opinion Final</label>
+          <div className="veredictoCaja">
+            <div className={`opcionVeredicto positivo ${recomienda ? 'seleccionado' : ''}`} onClick={() => setRecomienda(true)}>
+              <div className="icono">logo pendiente</div>
+              <span>RECOMENDADO</span>
+            </div>
+            <div className={`opcionVeredicto negativo ${!recomienda ? 'seleccionado' : ''}`} onClick={() => setRecomienda(false)}>
+              <div className="icono">logo pendiente</div>
+              <span>EVITAR</span>
+            </div>
+          </div>
+        </div>
 
-            <label>Juego</label>
+        <div className="bloqueEntrada">
+          <label className="etiquetaModerna">Puntuacion: {calificacion}</label>
+          <div className="nodosPuntaje">
+            {[...Array(10)].map((_, i) => (
+              <div key={i + 1} className={`nodoScore ${calificacion == i + 1 ? 'activo' : ''}`} onClick={() => setCalificacion(i + 1)}>
+                {i + 1}
+              </div>
+            ))}
+          </div>
+        </div>
 
-            <select
-                value={juego_id}
-                onChange={(e) => setJuegoId(e.target.value)}
-            >
+        <div className="bloqueEntrada">
+          <label className="etiquetaModerna">Reseña</label>
+          <textarea className="textoAreaModerno" placeholder="Escribe tu opinion" value={contenido} onChange={e => setContenido(e.target.value)} />
+        </div>
 
-                <option value="">Selecciona un juego</option>
-
-                {juegos.map(juego => (
-
-                    <option key={juego.id} value={juego.id}>
-                        {juego.nombre}
-                    </option>
-
-                ))}
-
-            </select>
-            <textarea
-                placeholder="contenido"
-                value={contenido}
-                onChange={e => setContenido(e.target.value)}
-            />
-            <input
-                placeholder="calificacion"
-                value={calificacion}
-                onChange={e => setCalificacion(e.target.value)}
-            />
-            <button>publicar</button>
-
-
-        </form>
-
-    );
+        <button className="botonDesplegar">Hacer publica mi opinion</button>
+      </form>
+    </div>
+  );
 }
 
 export default CrearResena;

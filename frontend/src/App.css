@@ -1,42 +1,250 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root{
+  
+  --bg-deep:#0d1117;
+  --panel-bg:#161b22;
+  --accent-neon:#7c4dff;
+  --accent-cyan:#00e5ff;
+  --text-primary:#f0f6fc;
+  --text-secondary:#8b949e;
+  --glass:rgba(255,255,255,0.03);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+body,html,#root{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background-color:var(--bg-deep);
+  color:var(--text-primary);
+  font-family:'Inter',sans-serif;
+  overflow:hidden;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.princi{
+  display:flex;
+  flex-direction:column;
+  height:100vh;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.navegadorArriba{
+  background-color:var(--panel-bg);
+  padding:0 2rem;
+  height:80px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--accent-neon);
+  box-shadow:0 0 20px rgba(124,77,255,0.2);
+  z-index:100;
 }
+.logoNav{
+  height:60px;
+  filter:drop-shadow(0 0 8px var(--accent-cyan));
+}
+.navIzquierda{
+  display:flex;
+  align-items:center;
+  gap:30px;
+}
+  .enlacesNav{
+  display:flex;
+  gap:20px;
+}
+.enlacesNav a{
+  text-decoration:none;
+  color:var(--text-secondary);
+  font-size:0.8rem;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+.enlacesNav a.activo{
+  color:var(--accent-cyan);
+}
+.navCentro{
+  flex:1;
+  max-width:500px;
+  padding:0 40px;
+}
+.busquedaGlobal{
+  width:100%;
+  background:#0d1117;
+  border:1px solid #30363d;
+  padding:10px 15px;
+  border-radius:20px;
+  color:white;
+}
+.navDerecha{
+  display:flex;
+  align-items:center;
+}
+.perfilMini{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-right:20px;
+}
+.avatarImg{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  border:2px solid var(--accent-neon);
+}
+.textoInfoUsuario{
+  display:flex;
+  flex-direction:column;
+  text-align:right;
+  line-height:1.2;
+}
+.nombreUsuarioNav{
+  font-weight:bold;
+  font-size:0.9rem;
+}
+.estadoOnline{
+  font-size:0.7rem;
+  color:#44ff44;
+}
+.botonSalir{
+  background:transparent;
+  border:2px solid var(--accent-neon);
+  color:var(--accent-neon);
+  padding:8px 15px;
+  font-weight:bold;
+  border-radius:8px;
+  cursor:pointer;
+}
+.cuadriculaContenido{
+  display:grid;
+  grid-template-columns:420px 1fr;
+  flex:1;
+  overflow:hidden;
+  background:radial-gradient(circle at top left,#1a152e,#0d1117);
+}
+.columnaIzquierda{
+  padding:2rem;
+  overflow-y:auto;
+  border-right:1px solid rgba(255,255,255,0.05);
+}
+.panelAccion{
+  background:var(--panel-bg);
+  padding:25px;
+  border-radius:20px;
+  border:1px solid var(--glass);
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+.tituloSeccion{
+  color:var(--accent-cyan);
+  text-shadow:0 0 10px rgba(0,229,255,0.3);
+  font-size:1.6rem;
+  margin-bottom:20px;
+  text-transform:uppercase;
+}
+.bloqueEntrada{
+  margin-bottom:20px;
+}
+.etiquetaModerna{
+  display:block;
+  font-size:0.75rem;
+  color:var(--accent-cyan);
+  margin-bottom:8px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+.selectorModerno,.textoAreaModerno{
+  width:100%;
+  background:var(--bg-deep);
+  border:1px solid #30363d;
+  color:white;
+  padding:12px;
+  border-radius:8px;
+  box-sizing:border-box;
+}
+.veredictoCaja{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+.opcionVeredicto{
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  padding:15px;
+  border:1px solid #30363d;
+  border-radius:12px;
+  cursor:pointer;
+  text-align:center;
+  background:var(--glass);
 }
+.opcionVeredicto.positivo.seleccionado{
+  border-color:#a4e044;
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+  background:rgba(164,224,68,0.1);
 }
-
-.card {
-  padding: 2em;
+.opcionVeredicto.negativo.seleccionado{
+  border-color: #ff4040;
+  background: rgba(255,64,64,0.1);
 }
-
-.read-the-docs {
-  color: #888;
+.nodosPuntaje{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+}
+.nodoScore{
+  padding:10px;
+  background:#0d1117;
+  border:1px solid #30363d;
+  text-align:center;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.nodoScore.activo{
+  background:var(--accent-neon);
+  box-shadow:0 0 15px var(--accent-neon);
+  border-color:var(--accent-neon);
+}
+.botonDesplegar{
+  width:100%;
+  padding:20px;
+  background:transparent;
+  border:2px solid var(--accent-cyan);
+  color:var(--accent-cyan);
+  font-weight:900;
+  cursor:pointer;
+  border-radius:12px;
+  transition:0.3s;
+}
+.columnaDerecha{
+  padding:2rem;
+  overflow-y:auto;
+}
+.tarjetaHorizontal{
+  display:flex;
+  background:var(--panel-bg);
+  border-radius:16px;
+  margin-bottom:25px;
+  border:1px solid var(--glass);
+  overflow:hidden;
+}
+.contenedorImagen{
+  width:220px;
+}
+.portadaJuego{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.infoResena{
+  flex:1;
+  padding:2rem;
+  text-align:left;
+}
+.nombreJuego{
+  font-size:2rem;
+  color:white;
+  margin:0;
+}
+.badgeScore{
+  background:#0d1117;
+  border: 1px solid var(--accent-cyan);
+  padding: 10px 20px;
+  border-radius: 50px;
+  color:var(--accent-cyan);
+  display:inline-block;
+  margin-top:15px;
 }

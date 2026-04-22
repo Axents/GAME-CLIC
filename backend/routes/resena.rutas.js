@@ -4,8 +4,7 @@ const controlador = require("../controllers/resena.controlador");
 
 router.post("/", controlador.crear);
 router.get("/", controlador.obtenerTodas);
-router.get("/:id", controlador.obtenerUna);
 
-
+router.get("/juego/:id", controlador.obtenerPorJuego); 
 
 module.exports = router;

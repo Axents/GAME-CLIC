@@ -1,31 +1,58 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
-import Login from './components/Login';
-import Registro from './components/Registro';
-import CrearResena from './components/CrearResena';
-import ListaResenas from './components/ListaResenas';
+import Login from './components/Login'
+import Registro from './components/Registro'
+import CrearResena from './components/CrearResena'
+import ListaResenas from './components/ListaResenas'
 import logoImg from '../images/logo.jpg'
 
 function App(){
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [esRegistro, setEsRegistro] = useState(false);
+  const [terminoBusqueda, setTerminoBusqueda] = useState("");
+  const [vistaActual, setVistaActual] = useState("explorar");
+  const [estadoUsuario, setEstadoUsuario] = useState("En línea");
+  const [mostrarMenuEstado, setMostrarMenuEstado] = useState(false);
+  const [nombreUsuario, setNombreUsuario] = useState(localStorage.getItem("nombre_gamer") || "Usuario");
+  const [fotoPerfil, setFotoPerfil] = useState(localStorage.getItem("foto_perfil") || "");
+
+  useEffect(()=>{
+    const usuario = localStorage.getItem("nombre_gamer");
+    if(usuario){
+      setNombreUsuario(usuario);
+    }
+    const foto=localStorage.getItem("foto_perfil");
+    if(foto){
+      setFotoPerfil(foto);
+    }
+  }, [token]);
+
+  const cambiarFoto=()=>{
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload=()=>{
+        localStorage.setItem("foto_perfil", reader.result);
+        setFotoPerfil(reader.result);
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  };
 
   if(!token){
     return(
       <div className="auth-wrapper">
         <div className="auth-container-wrapper">
-          <img src={logoImg} alt="Logo" style={{ width: '200px', marginBottom: '20px' }} />
           {esRegistro ? (
             <Registro irALogin={() => setEsRegistro(false)} />
           ) : (
             <>
               <Login setToken={setToken} />
-              <p 
-                onClick={() => setEsRegistro(true)} 
-                style={{ cursor: 'pointer', color: '#66c0f4', marginTop: '15px', textDecoration: 'underline' }}
-              >
-                ¿No tienes cuenta? Regístrate aquí
-              </p>
+              <p onClick={() => setEsRegistro(true)} className="enlaceAuth">¿Nuevo por aquí? Crea una cuenta</p>
             </>
           )}
         </div>
@@ -33,49 +60,49 @@ function App(){
     );
   }
 
-  return(
+  return (
     <div className="princi">
       <header className="navegadorArriba">
         <div className="navIzquierda">
           <img src={logoImg} alt="Logo" className="logoNav" />
           <nav className="enlacesNav">
-            <a href="#" className="activo">EXPLORAR</a>
-            <a href="#">COMUNIDAD</a>
-            <a href="#">MI BIBLIOTECA</a>
+            <a href="#" className={vistaActual === "explorar" ? "activo" : ""} onClick={() => setVistaActual("explorar")}>EXPLORAR</a>
+            <a href="#" className={vistaActual === "biblioteca" ? "activo" : ""} onClick={() => setVistaActual("biblioteca")}>MI BIBLIOTECA</a>
           </nav>
         </div>
-
         <div className="navCentro">
-          <div className="contenedorBusqueda">
-            <input type="text" placeholder="Buscar juegos..." className="busquedaGlobal" />
-          </div>
+          <input type="text" placeholder="Buscar videojuego" className="busquedaGlobal" value={terminoBusqueda} onChange={(e) => setTerminoBusqueda(e.target.value)} />
         </div>
-
         <div className="navDerecha">
           <div className="perfilMini">
             <div className="textoInfoUsuario">
-              <span className="nombreUsuarioNav">Gamer_Pro</span>
-              <span className="estadoOnline">En línea</span>
+              <span className="nombreUsuarioNav">{nombreUsuario}</span>
+              <div className="selectorEstado" onClick={() => setMostrarMenuEstado(!mostrarMenuEstado)}>
+                <span className={`puntoEstado ${estadoUsuario.replace(/\s/g, '').toLowerCase()}`}></span>
+                {estadoUsuario} ▼
+                {mostrarMenuEstado && (
+                  <div className="menuEstados">
+                    <div onClick={() => setEstadoUsuario("En línea")}>En linea</div>
+                    <div onClick={() => setEstadoUsuario("Incógnito")}>Incognito</div>
+                    <div onClick={() => setEstadoUsuario("Ausente")}>Ausente</div>
+                  </div>
+                )}
+              </div>
             </div>
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" className="avatarImg" />
+            <img src={fotoPerfil || `https://api.dicebear.com/7.x/bottts/svg?seed=${nombreUsuario}`} alt="avatar" className="avatarImg" onClick={cambiarFoto} title="Cambiar foto de perfil" />
           </div>
-          <button className="botonSalir" onClick={() => {
-            localStorage.removeItem("token");
-            setToken(null);
-          }}>SALIR</button>
+          <button className="botonSalir" onClick={() => { localStorage.clear(); window.location.reload(); }}>SALIR</button>
         </div>
       </header>
-
       <div className="cuadriculaContenido">
         <aside className="columnaIzquierda">
           <CrearResena />
         </aside>
         <main className="columnaDerecha">
-          <ListaResenas />
+          <ListaResenas filtro={terminoBusqueda} vista={vistaActual} />
         </main>
       </div>
     </div>
   );
 }
-
 export default App;

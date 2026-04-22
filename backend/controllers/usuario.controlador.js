@@ -7,7 +7,7 @@ exports.registrar=(req, res)=>{
 
     if(!nombre_gamer || !correo || !password){
 
-        return res.status(400).json({ message: "Todos los campos son obligatorios" });
+        return res.status(400).json({ message: "Completa todos los campos" });
     }
     const encriptado=bcrypt.hashSync(password, 10);
 
@@ -50,6 +50,6 @@ exports.iniciarSesion=(req, res)=>{
             process.env.jwt_clave,
             {expiresIn: "2h"}
         );
-        res.json({ message: "Login con exito", token: tokenSesion });
+        res.json({ message: "Login con exito", token: tokenSesion,nombre_gamer:usuarioBD.nombre_gamer});
     });
 };

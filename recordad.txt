@@ -1,4 +1,0 @@
-2 terminales siempre una  back y otra front.
-bacnkend = proyectosoftware> node server.js
-
-frontend = dentro de /frontend/npm run dev

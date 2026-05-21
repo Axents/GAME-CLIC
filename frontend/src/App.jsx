@@ -66,9 +66,21 @@ function App(){
         <div className="navIzquierda">
           <img src={logoImg} alt="Logo" className="logoNav" />
           <nav className="enlacesNav">
-            <a href="#" className={vistaActual === "explorar" ? "activo" : ""} onClick={() => setVistaActual("explorar")}>EXPLORAR</a>
-            <a href="#" className={vistaActual === "biblioteca" ? "activo" : ""} onClick={() => setVistaActual("biblioteca")}>MI BIBLIOTECA</a>
-          </nav>
+            <a 
+              href="#" 
+              className={vistaActual === "explorar" ? "activo" : ""} 
+              onClick={(e) => { e.preventDefault(); setVistaActual("explorar"); }}
+            >
+              EXPLORAR
+            </a>
+            <a 
+              href="#" 
+              className={vistaActual === "biblioteca" ? "activo" : ""} 
+              onClick={(e) => { e.preventDefault(); setVistaActual("biblioteca"); }}
+            >
+              MI BIBLIOTECA
+            </a>
+        </nav>
         </div>
         <div className="navCentro">
           <input type="text" placeholder="Buscar videojuego" className="busquedaGlobal" value={terminoBusqueda} onChange={(e) => setTerminoBusqueda(e.target.value)} />
